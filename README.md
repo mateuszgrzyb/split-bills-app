@@ -1,110 +1,59 @@
-Rachunko
+# Rachunko
 
-Aplikacja do wspólnego ewidencjonowania wydatków i rozliczania ich w grupie.
+Lekki szkielet aplikacji do dzielenia wydatków w grupie. Backend jest oparty na FastAPI, a frontend to responsywny HTML, CSS i JavaScript bez dodatkowego bundlera.
 
-Technologie
+## Struktura
 
-Frontend: HTML, CSS i JavaScript
-
-Backend: Python i FastAPI
-
-Baza danych: PostgreSQL
-
-ORM: SQLAlchemy
-
-Aktualny stan
-
-Backend udostępnia stronę informacyjną oraz GET /api/health.
-
-Modele bazy obejmują użytkowników, grupy, uczestników i rachunki.
-
-Tabele można utworzyć w PostgreSQL na podstawie modeli.
-
-Frontend jest demonstracyjnym widokiem z przykładowymi danymi.
-
-Formularz wydatku działa tylko w przeglądarce — dane nie są jeszcze zapisywane przez API.
-
-Endpointy CRUD dla grup i rachunków są do przygotowania.
-
-Struktura projektu
-
-Rachunko/
+```text
+rachunko-starter/
 ├── backend/
 │   ├── app/
 │   │   ├── api/routes/health.py
-│   │   ├── create_tables.py
-│   │   ├── database.py
-│   │   ├── main.py
-│   │   └── models.py
+│   │   └── main.py
 │   └── requirements.txt
 └── frontend/
-    ├── css/
-    ├── js/
+    ├── css/styles.css
+    ├── js/api.js
+    ├── js/app.js
     └── index.html
+```
 
-Uruchomienie lokalne (Windows)
+## Uruchomienie na Windows
 
-Wymagania
+### 1. Backend
 
-Python
+W pierwszym terminalu:
 
-PostgreSQL
-
-pgAdmin lub inne narzędzie do zarządzania PostgreSQL
-
-1. Utwórz bazę PostgreSQL
-
-Uruchom usługę PostgreSQL. Jeśli baza rachunko jeszcze nie istnieje, otwórz w pgAdmin Query Tool połączony z bazą postgres i wykonaj:
-
-CREATE DATABASE rachunko;
-
-To polecenie tworzy bazę. Tabele zostaną utworzone w kolejnym kroku na podstawie modeli SQLAlchemy.
-
-2. Przygotuj backend
-
-W terminalu PowerShell, z katalogu głównego repozytorium:
-
-Set-Location .\backend
+```powershell
+cd backend
 py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
+.venv\Scripts\Activate.ps1
+py -m pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
 
-Utwórz plik backend/.env i wpisz adres połączenia:
+API będzie dostępne pod `http://127.0.0.1:8000`, a interaktywna dokumentacja Swagger pod `http://127.0.0.1:8000/docs`.
 
-DATABASE_URL=postgresql+psycopg://postgres:TWOJE_HASLO@localhost:5432/rachunko
+### 2. Frontend
 
-Zastąp TWOJE_HASLO hasłem użytkownika PostgreSQL. Jeśli używasz innego użytkownika, hosta lub portu, zmień odpowiednie wartości. Nie dodawaj pliku .env do repozytorium.
+W drugim terminalu, z katalogu `rachunko-starter`:
 
-3. Utwórz tabele
-
-Będąc w katalogu backend, uruchom:
-
-.\.venv\Scripts\python.exe -m app.create_tables
-
-Polecenie utworzy brakujące tabele. Nie zmienia kolumn w tabelach, które już istnieją.
-
-4. Uruchom API
-
-W tym samym terminalu, nadal z katalogu backend, uruchom:
-
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
-
-API będzie dostępne pod http://127.0.0.1:8000.
-
-Dokumentacja API: http://127.0.0.1:8000/docs
-
-Status API: http://127.0.0.1:8000/api/health
-
-5. Uruchom frontend
-
-Zostaw API działające. Otwórz drugi terminal w katalogu głównym projektu i uruchom:
-
+```powershell
 py -m http.server 5500 --directory frontend
+```
 
-Otwórz http://127.0.0.1:5500 w przeglądarce. Frontend sprawdza status API, ale nadal pokazuje przykładowe dane. Formularz nie zapisuje wydatków w bazie.
+Otwórz `http://127.0.0.1:5500`. Frontend sprawdzi połączenie z API i pokaże jego status.
 
-Uwagi
+## Co już jest
 
-Dane dostępowe do PostgreSQL przechowuj lokalnie w backend/.env.
+- działający punkt kontrolny `GET /api/health`;
+- konfiguracja CORS dla lokalnego frontendu;
+- responsywny ekran grupy z przykładowymi danymi;
+- formularz demonstracyjny dodawania wydatku działający w przeglądarce;
+- osobny moduł klienta API, gotowy do rozbudowy.
 
-Po zmianie modeli ponowne uruchomienie create_tables nie zaktualizuje istniejących kolumn.
+Wydatki widoczne w tej makiecie są przykładowe. Formularz działa wyłącznie lokalnie w przeglądarce i jeszcze nie zapisuje danych na backendzie. To celowy punkt startowy: kolejnym krokiem będzie ustalenie modeli danych i dodanie bazy oraz endpointów grup, uczestników, wydatków i rozliczeń.
 
+## Ustawienie adresu API
+
+Domyślnie frontend łączy się z `http://127.0.0.1:8000`. Adres można zmienić w `frontend/js/api.js`.
