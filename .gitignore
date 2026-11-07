@@ -5,6 +5,7 @@ venv/
 .vs/
 .env
 .idea/
-.vscode/
 node_modules/
 dist/
+
+.env
