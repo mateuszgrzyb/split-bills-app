@@ -1,103 +1,13 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f8f5" />
-    <meta name="description" content="Wspólne wydatki i proste rozliczenia w grupie." />
-    <title>Rachunko — wspólne wydatki</title>
-    <link rel="stylesheet" href="./css/styles.css" />
-    <script type="module" src="./js/app.js"></script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Menu główne">
-        <a class="brand" href="#top" aria-label="Rachunko — strona główna">
-          <span class="brand-mark" aria-hidden="true">R</span>
-          <span>rachunko<span class="brand-dot">.</span></span>
-        </a>
-        <p class="nav-caption">MENU</p>
-        <nav class="side-nav">
-          <a class="nav-link active" href="#group"><span aria-hidden="true">◫</span> Moje grupy</a>
-          <a class="nav-link" href="#expenses"><span aria-hidden="true">↗</span> Wydatki</a>
-          <a class="nav-link" href="#settlement"><span aria-hidden="true">⇄</span> Rozliczenia</a>
-        </nav>
-        <div class="sidebar-note">
-          <span class="note-icon" aria-hidden="true">✦</span>
-          <strong>Wspólny wyjazd?</strong>
-          <p>Dodaj wydatki na bieżąco. Resztę policzymy za Ciebie.</p>
-        </div>
-        <div class="profile"><span class="avatar avatar-mati">M</span><span><strong>Mateusz</strong><small>Uczestnik</small></span><span class="profile-menu">···</span></div>
-      </aside>
-
-      <main id="top" class="main-content">
-        <header class="topbar">
-          <div class="breadcrumb">Moje grupy <span>/</span> <strong>Weekend w górach</strong></div>
-          <div class="topbar-right"><span id="api-status" class="api-status"><i></i> Sprawdzam API…</span><button class="icon-button" aria-label="Powiadomienia">♧</button></div>
-        </header>
-
-        <section id="group" class="group-heading">
-          <div>
-            <p class="eyebrow">TWOJA GRUPA</p>
-            <h1>Weekend w górach <button class="edit-button" aria-label="Edytuj nazwę grupy">✎</button></h1>
-            <p class="subheading">12–14 czerwca <span>·</span> 4 osoby</p>
-          </div>
-          <button class="secondary-button invite-button"><span aria-hidden="true">＋</span> Zaproś osobę</button>
-        </section>
-
-        <section class="summary-grid" aria-label="Podsumowanie grupy">
-          <article class="summary-card balance-card">
-            <div class="card-topline"><span>Łączne wydatki</span><span class="metric-icon">↗</span></div>
-            <strong class="metric">1 346,40 zł</strong>
-            <span class="metric-foot">Wszystkie wydatki grupy</span>
-          </article>
-          <article class="summary-card owed-card">
-            <div class="card-topline"><span>Twoje saldo</span><span class="metric-icon">⇄</span></div>
-            <strong class="metric">+124,25 zł</strong>
-            <span class="metric-foot">Tyle powinieneś otrzymać</span>
-          </article>
-          <article class="summary-card people-card">
-            <div class="card-topline"><span>Uczestnicy</span><button class="text-button">Zobacz wszystkich</button></div>
-            <div class="avatar-stack" aria-label="Uczestnicy: Mati, Ola, Bartek, Kasia">
-              <span class="avatar avatar-mati">M</span><span class="avatar avatar-ola">O</span><span class="avatar avatar-bartek">B</span><span class="avatar avatar-kasia">K</span>
-              <span class="avatar-count">4</span>
-            </div>
-            <span class="metric-foot">Grupa jest gotowa do rozliczenia</span>
-          </article>
-        </section>
-
-        <section class="content-grid">
-          <article id="expenses" class="panel expenses-panel">
-            <div class="panel-header"><div><p class="eyebrow">HISTORIA GRUPY</p><h2>Ostatnie wydatki</h2></div><button id="open-expense" class="primary-button"><span aria-hidden="true">＋</span> Dodaj wydatek</button></div>
-            <div class="expense-list" id="expense-list">
-              <div class="expense-row"><span class="expense-icon groceries">▧</span><span class="expense-info"><strong>Zakupy na grilla</strong><small>Mati · dzisiaj, 12:40</small></span><span class="expense-share">Twoja część <strong>46,60 zł</strong></span><strong class="expense-amount">186,40 zł</strong></div>
-              <div class="expense-row"><span class="expense-icon fuel">⌁</span><span class="expense-info"><strong>Paliwo</strong><small>Ola · dzisiaj, 10:15</small></span><span class="expense-share">Twoja część <strong>60,00 zł</strong></span><strong class="expense-amount">240,00 zł</strong></div>
-              <div class="expense-row"><span class="expense-icon stay">⌂</span><span class="expense-info"><strong>Domek</strong><small>Bartek · wczoraj, 19:22</small></span><span class="expense-share">Twoja część <strong>230,00 zł</strong></span><strong class="expense-amount">920,00 zł</strong></div>
-            </div>
-            <button class="list-link">Zobacz wszystkie wydatki <span aria-hidden="true">→</span></button>
-          </article>
-
-          <article id="settlement" class="panel settlement-panel">
-            <div class="panel-header"><div><p class="eyebrow">NAJPROSTSZE ROZLICZENIE</p><h2>Kto komu oddaje?</h2></div><span class="settlement-badge">2 przelewy</span></div>
-            <div class="transfer-row"><span class="avatar avatar-ola">O</span><span class="transfer-names"><strong>Ola</strong><small>przelewa do</small></span><span class="transfer-arrow">→</span><span class="avatar avatar-mati">M</span><strong class="transfer-amount">124,25 zł</strong></div>
-            <div class="transfer-row"><span class="avatar avatar-bartek">B</span><span class="transfer-names"><strong>Bartek</strong><small>przelewa do</small></span><span class="transfer-arrow">→</span><span class="avatar avatar-mati">M</span><strong class="transfer-amount">62,15 zł</strong></div>
-            <button id="settle-button" class="settle-button">Oznacz grupę jako rozliczoną <span aria-hidden="true">→</span></button>
-            <p class="settlement-hint">Przelewy wykonuj poza aplikacją. Tutaj zapiszesz, że grupa jest już rozliczona.</p>
-          </article>
-        </section>
-        <footer class="page-footer">Rachunko <span>·</span> Wydatki pod kontrolą, relacje bez rachunków</footer>
-      </main>
-    </div>
-
-    <dialog id="expense-dialog" class="expense-dialog">
-      <form id="expense-form">
-        <div class="dialog-heading"><div><p class="eyebrow">NOWY KOSZT</p><h2>Dodaj wydatek</h2></div><button type="button" id="close-expense" class="icon-button" aria-label="Zamknij">×</button></div>
-        <label>Opis<input name="description" placeholder="np. Zakupy na grilla" required maxlength="80" /></label>
-        <label>Kwota (zł)<input name="amount" type="number" min="0.01" step="0.01" placeholder="0,00" required /></label>
-        <p class="form-note">W tej wersji dane formularza pozostają w przeglądarce i nie są zapisywane na serwerze.</p>
-        <div class="dialog-actions"><button type="button" id="cancel-expense" class="secondary-button">Anuluj</button><button class="primary-button" type="submit">Dodaj do podglądu</button></div>
-      </form>
-    </dialog>
-    <div class="mobile-nav" aria-label="Nawigacja mobilna"><a class="active" href="#group"><span>◫</span>Grupa</a><a href="#expenses"><span>↗</span>Wydatki</a><a href="#settlement"><span>⇄</span>Rozliczenie</a></div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
