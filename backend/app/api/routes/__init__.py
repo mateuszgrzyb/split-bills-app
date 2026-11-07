@@ -1,0 +1,1 @@
+"""Endpointy API."""
