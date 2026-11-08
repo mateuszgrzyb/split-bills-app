@@ -14,5 +14,22 @@ dependencies = [
     "uvicorn>=0.54.0",
 ]
 
+[dependency-groups]
+dev = [
+    "httpx2>=2.0.0",
+    "pytest>=8.3.2",
+    "pytest-env>=1.1.5",
+    "pytest-asyncio>=1.2.0",
+    "testcontainers[postgres]>=4.10.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.pytest_env]
+DATABASE_URL = "postgresql+asyncpg://test:test@localhost/test"
+JWT_SECRET = "unit-test-secret-with-a-sufficient-key-length"
+
 [tool.vercel]
 entrypoint = "app.main:app"
