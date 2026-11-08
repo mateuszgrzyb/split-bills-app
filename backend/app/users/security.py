@@ -6,9 +6,10 @@ from pwdlib import PasswordHash
 
 from app.config import SETTINGS
 
-
 _hasher = PasswordHash.recommended()  # argon2id
-DUMMY_HASH = _hasher.hash("not-a-real-password")  # equalizes timing for unknown usernames
+DUMMY_HASH = _hasher.hash(
+    "not-a-real-password"
+)  # equalizes timing for unknown usernames
 
 
 def hash_password(password: str) -> str:
@@ -30,12 +31,16 @@ def _encode(sub: str, typ: str, ttl: timedelta, jti: uuid.UUID | None = None):
 
 
 def create_access_token(user_id: uuid.UUID) -> str:
-    token, _ = _encode(str(user_id), "access", timedelta(minutes=SETTINGS.access_ttl_min))
+    token, _ = _encode(
+        str(user_id), "access", timedelta(minutes=SETTINGS.access_ttl_min)
+    )
     return token
 
 
 def create_refresh_token(user_id: uuid.UUID, jti: uuid.UUID) -> tuple[str, datetime]:
-    return _encode(str(user_id), "refresh", timedelta(days=SETTINGS.refresh_ttl_days), jti)
+    return _encode(
+        str(user_id), "refresh", timedelta(days=SETTINGS.refresh_ttl_days), jti
+    )
 
 
 def decode_token(token: str, expected_typ: str) -> dict:

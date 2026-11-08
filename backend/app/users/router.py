@@ -32,7 +32,9 @@ def _unauthorized(detail: str = "Invalid credentials") -> HTTPException:
     return HTTPException(status.HTTP_401_UNAUTHORIZED, detail)
 
 
-async def _issue_tokens(session: AsyncSession, response: Response, user_id: uuid.UUID) -> str:
+async def _issue_tokens(
+    session: AsyncSession, response: Response, user_id: uuid.UUID
+) -> str:
     jti = uuid.uuid4()
     refresh, exp = create_refresh_token(user_id, jti)
     session.add(RefreshToken(jti=jti, user_id=user_id, expires_at=exp))
@@ -49,8 +51,10 @@ async def _issue_tokens(session: AsyncSession, response: Response, user_id: uuid
     return create_access_token(user_id)
 
 
-@router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
-async def register(body: RegisterIn, session: AsyncSession = Depends(get_session)):
+@router.post("/register", status_code=status.HTTP_201_CREATED)
+async def register(
+    body: RegisterIn, session: AsyncSession = Depends(get_session)
+) -> UserOut:
     username = body.username.lower()
     exists = await session.scalar(select(User.id).where(User.username == username))
     if exists:
@@ -67,11 +71,13 @@ async def register(body: RegisterIn, session: AsyncSession = Depends(get_session
     return user
 
 
-@router.post("/login", response_model=TokenOut)
+@router.post("/login")
 async def login(
     body: LoginIn, response: Response, session: AsyncSession = Depends(get_session)
-):
-    user = await session.scalar(select(User).where(User.username == body.username.lower()))
+) -> TokenOut:
+    user = await session.scalar(
+        select(User).where(User.username == body.username.lower())
+    )
     # always run a verify so response time doesn't reveal whether the username exists
     ok = await asyncio.to_thread(
         verify_password, body.password, user.password_hash if user else DUMMY_HASH
@@ -81,12 +87,16 @@ async def login(
     return TokenOut(access_token=await _issue_tokens(session, response, user.id))
 
 
-@router.post("/refresh", response_model=TokenOut)
+@router.post(
+    "/refresh",
+    response_model=None,
+    responses={200: {"model": TokenOut}},
+)
 async def refresh(
     response: Response,
     refresh_token: str | None = Cookie(default=None, alias=COOKIE),
     session: AsyncSession = Depends(get_session),
-):
+) -> TokenOut | JSONResponse:
     if refresh_token is None:
         raise _unauthorized("Missing refresh token")
     try:
@@ -145,6 +155,6 @@ async def logout(
     response.delete_cookie(COOKIE, path=COOKIE_PATH)
 
 
-@router.get("/me", response_model=UserOut)
-async def me(user: User = Depends(get_current_user)):
+@router.get("/me")
+async def me(user: User = Depends(get_current_user)) -> UserOut:
     return user
