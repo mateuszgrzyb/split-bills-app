@@ -3,21 +3,23 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.users.router import router as users_router
 from app.api.routes.health import router as health_router
-
 from app.db import Base, engine
 from app.users import models as users_models  # noqa: F401
+from app.users.router import router as users_router
+
 
 async def init_db() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
     await engine.dispoze()
+
 
 app = FastAPI(
     title="Rachunko API",
@@ -36,6 +38,7 @@ app.add_middleware(
 
 app.include_router(health_router)
 app.include_router(users_router)
+
 
 @app.get("/", tags=["Informacje"])
 def root() -> dict[str, str]:

@@ -1,5 +1,5 @@
-from http.cookies import SimpleCookie
 import uuid
+from http.cookies import SimpleCookie
 from unittest.mock import AsyncMock, Mock
 
 import httpx2
@@ -38,7 +38,9 @@ async def api_client():
 
     app.dependency_overrides[get_session] = override_get_session
     transport = httpx2.ASGITransport(app=app)
-    async with httpx2.AsyncClient(transport=transport, base_url="http://test") as client:
+    async with httpx2.AsyncClient(
+        transport=transport, base_url="http://test"
+    ) as client:
         yield client, session, app
 
 
@@ -148,7 +150,9 @@ async def test_login_issues_access_token_and_persists_refresh_cookie(api_client)
 
     # Then access and refresh tokens are issued and the refresh token is stored
     assert response.status_code == 200
-    assert decode_token(response.json()["access_token"], "access")["sub"] == str(user.id)
+    assert decode_token(response.json()["access_token"], "access")["sub"] == str(
+        user.id
+    )
     refresh_record = session.add.call_args.args[0]
     assert isinstance(refresh_record, RefreshToken)
     assert refresh_record.user_id == user.id
@@ -164,7 +168,10 @@ async def test_login_issues_access_token_and_persists_refresh_cookie(api_client)
     ("user", "password"),
     [
         (None, "password"),
-        (User(id=uuid.uuid4(), username="alice", password_hash="", is_active=True), "wrong"),
+        (
+            User(id=uuid.uuid4(), username="alice", password_hash="", is_active=True),
+            "wrong",
+        ),
         (
             User(
                 id=uuid.uuid4(),
@@ -211,7 +218,9 @@ async def test_refresh_rotates_token_and_revokes_old_token(api_client):
 
     # Then a new access and refresh token are issued and the old token is claimed
     assert response.status_code == 200
-    assert decode_token(response.json()["access_token"], "access")["sub"] == str(user.id)
+    assert decode_token(response.json()["access_token"], "access")["sub"] == str(
+        user.id
+    )
     new_token = _refresh_cookie(response)
     assert decode_token(new_token, "refresh")["jti"] != str(old_jti)
     assert "httponly" in response.headers["set-cookie"].lower()
@@ -257,7 +266,9 @@ async def test_refresh_rejects_missing_and_invalid_tokens(api_client):
 async def test_refresh_rejects_token_for_inactive_user(api_client):
     # Given an inactive user with a valid refresh token
     client, session, _ = api_client
-    user = User(id=uuid.uuid4(), username="inactive", password_hash="hash", is_active=False)
+    user = User(
+        id=uuid.uuid4(), username="inactive", password_hash="hash", is_active=False
+    )
     token_id = uuid.uuid4()
     token, _ = create_refresh_token(user.id, token_id)
     session.scalar.return_value = token_id

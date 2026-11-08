@@ -32,7 +32,9 @@ def _unauthorized(detail: str = "Invalid credentials") -> HTTPException:
     return HTTPException(status.HTTP_401_UNAUTHORIZED, detail)
 
 
-async def _issue_tokens(session: AsyncSession, response: Response, user_id: uuid.UUID) -> str:
+async def _issue_tokens(
+    session: AsyncSession, response: Response, user_id: uuid.UUID
+) -> str:
     jti = uuid.uuid4()
     refresh, exp = create_refresh_token(user_id, jti)
     session.add(RefreshToken(jti=jti, user_id=user_id, expires_at=exp))
@@ -73,7 +75,9 @@ async def register(
 async def login(
     body: LoginIn, response: Response, session: AsyncSession = Depends(get_session)
 ) -> TokenOut:
-    user = await session.scalar(select(User).where(User.username == body.username.lower()))
+    user = await session.scalar(
+        select(User).where(User.username == body.username.lower())
+    )
     # always run a verify so response time doesn't reveal whether the username exists
     ok = await asyncio.to_thread(
         verify_password, body.password, user.password_hash if user else DUMMY_HASH

@@ -1,7 +1,6 @@
 import uuid
-from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class RegisterIn(BaseModel):
